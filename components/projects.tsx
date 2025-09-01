@@ -1,39 +1,52 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Github } from "lucide-react"
-import { useEffect, useState, useRef } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink, Github, Image as ImageIcon } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
+import { AnimatedCounter } from "@/components/animated-counter";
 
 export function Projects() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
+          setIsVisible(true);
         }
       },
-      { threshold: 0.2 },
-    )
+      { threshold: 0.2 }
+    );
 
     if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+      observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   const projects = [
     {
       title: "E-Commerce Platform",
       description:
         "A full-stack e-commerce solution with real-time inventory management, payment processing, and admin dashboard.",
-      image: "/modern-ecommerce-interface.png",
-      technologies: ["Next.js", "TypeScript", "Stripe", "PostgreSQL", "Tailwind CSS"],
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "Stripe",
+        "PostgreSQL",
+        "Tailwind CSS",
+      ],
       github: "#",
       demo: "#",
       featured: true,
@@ -42,7 +55,6 @@ export function Projects() {
       title: "Task Management App",
       description:
         "Collaborative project management tool with real-time updates, team collaboration, and advanced analytics.",
-      image: "/task-management-dashboard.png",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Chart.js"],
       github: "#",
       demo: "#",
@@ -52,16 +64,21 @@ export function Projects() {
       title: "AI Content Generator",
       description:
         "AI-powered content creation platform that helps businesses generate marketing copy and social media content.",
-      image: "/ai-content-generation-interface.png",
-      technologies: ["Next.js", "OpenAI API", "Prisma", "Vercel", "Tailwind CSS"],
+      technologies: [
+        "Next.js",
+        "OpenAI API",
+        "Prisma",
+        "Vercel",
+        "Tailwind CSS",
+      ],
       github: "#",
       demo: "#",
       featured: true,
     },
     {
       title: "Weather Dashboard",
-      description: "Beautiful weather application with location-based forecasts, interactive maps, and weather alerts.",
-      image: "/weather-dashboard-with-maps-and-charts.png",
+      description:
+        "Beautiful weather application with location-based forecasts, interactive maps, and weather alerts.",
       technologies: ["Vue.js", "Weather API", "Mapbox", "Chart.js"],
       github: "#",
       demo: "#",
@@ -71,7 +88,6 @@ export function Projects() {
       title: "Fitness Tracker",
       description:
         "Mobile-first fitness tracking application with workout plans, progress tracking, and social features.",
-      image: "/fitness-tracking-app.png",
       technologies: ["React Native", "Firebase", "Redux", "Chart.js"],
       github: "#",
       demo: "#",
@@ -79,27 +95,42 @@ export function Projects() {
     },
     {
       title: "Blog Platform",
-      description: "Modern blogging platform with markdown support, SEO optimization, and content management system.",
-      image: "/modern-blog-platform.png",
+      description:
+        "Modern blogging platform with markdown support, SEO optimization, and content management system.",
       technologies: ["Next.js", "MDX", "Sanity CMS", "Vercel"],
       github: "#",
       demo: "#",
       featured: false,
     },
-  ]
+  ];
 
-  const featuredProjects = projects.filter((project) => project.featured)
-  const otherProjects = projects.filter((project) => !project.featured)
+  const featuredProjects = projects.filter((project) => project.featured);
+  const otherProjects = projects.filter((project) => !project.featured);
 
   return (
-    <section ref={sectionRef} id="projects" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section
+      ref={sectionRef}
+      id="projects"
+      className="py-20 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-6xl mx-auto">
         <div
-          className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "animate-in fade-in slide-in-from-bottom-4" : "opacity-0 translate-y-8"}`}
+          className={`text-center mb-16 transition-all duration-1000 ${
+            isVisible
+              ? "animate-fade-in animate-slide-in-from-bottom-4"
+              : "opacity-0 translate-y-8"
+          }`}
         >
-          <h2 className="font-montserrat font-black text-3xl sm:text-4xl mb-4 text-balance">Featured Projects</h2>
+          <h2 className="font-montserrat font-black text-3xl sm:text-4xl mb-4 text-balance">
+            Featured Projects
+          </h2>
           <p className="font-open-sans text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            A showcase of my recent work, demonstrating technical expertise and creative problem-solving.
+            A showcase of my recent work, demonstrating technical expertise and
+            creative problem-solving. I&apos;ve completed{" "}
+            <span className="text-primary font-bold">
+              <AnimatedCounter target={projects.length} />
+            </span>{" "}
+            projects and counting!
           </p>
         </div>
 
@@ -108,24 +139,31 @@ export function Projects() {
           {featuredProjects.map((project, index) => (
             <Card
               key={index}
-              className={`overflow-hidden hover:shadow-xl transition-all duration-500 group hover:scale-[1.02] hover:-translate-y-2 ${
-                isVisible ? "animate-in fade-in slide-in-from-bottom-4" : "opacity-0 translate-y-8"
+              className={`group relative overflow-hidden rounded-xl bg-card text-card-foreground shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${
+                isVisible
+                  ? "animate-fade-in animate-slide-in-from-bottom-4"
+                  : ""
               }`}
               style={{ animationDelay: `${index * 200}ms` }}
             >
-              <div className="aspect-video overflow-hidden relative">
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                <div className="text-center">
+                  <ImageIcon className="h-16 w-16 text-primary/50 mx-auto mb-4" />
+                  <h3 className="font-montserrat font-bold text-lg text-primary/70">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Project Preview
+                  </p>
+                </div>
               </div>
               <CardHeader>
                 <CardTitle className="font-montserrat font-bold text-xl group-hover:text-primary transition-colors duration-300">
                   {project.title}
                 </CardTitle>
-                <CardDescription className="font-open-sans leading-relaxed">{project.description}</CardDescription>
+                <CardDescription className="font-open-sans leading-relaxed">
+                  {project.description}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -141,27 +179,24 @@ export function Projects() {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    asChild
-                    className="hover:scale-105 transition-transform duration-200 bg-transparent"
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all hover:scale-105 transition-transform duration-200 bg-transparent border border-input hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1.5"
                   >
-                    <a href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="h-4 w-4 mr-2" />
-                      Code
-                    </a>
-                  </Button>
-                  <Button
-                    size="sm"
-                    asChild
-                    className="hover:scale-105 transition-transform duration-200 hover:shadow-lg"
+                    <Github className="h-4 w-4 mr-2" />
+                    Code
+                  </a>
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all hover:scale-105 transition-transform duration-200 hover:shadow-lg bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 py-1.5 rounded-md"
                   >
-                    <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Demo
-                    </a>
-                  </Button>
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Demo
+                  </a>
                 </div>
               </CardContent>
             </Card>
@@ -172,7 +207,9 @@ export function Projects() {
         <div>
           <h3
             className={`font-montserrat font-bold text-2xl mb-8 text-center transition-all duration-1000 delay-500 ${
-              isVisible ? "animate-in fade-in slide-in-from-bottom-4" : "opacity-0 translate-y-8"
+              isVisible
+                ? "animate-fade-in animate-slide-in-from-bottom-4"
+                : "opacity-0 translate-y-8"
             }`}
           >
             Other Projects
@@ -182,7 +219,9 @@ export function Projects() {
               <Card
                 key={index}
                 className={`hover:shadow-lg transition-all duration-500 hover:scale-105 hover:-translate-y-1 group ${
-                  isVisible ? "animate-in fade-in slide-in-from-bottom-4" : "opacity-0 translate-y-8"
+                  isVisible
+                    ? "animate-fade-in animate-slide-in-from-bottom-4"
+                    : "opacity-0 translate-y-8"
                 }`}
                 style={{ animationDelay: `${(index + 3) * 150}ms` }}
               >
@@ -215,26 +254,22 @@ export function Projects() {
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      className="hover:scale-125 hover:rotate-12 transition-all duration-300"
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all hover:scale-125 hover:rotate-12 transition-all duration-300 hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1.5"
                     >
-                      <a href={project.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-4 w-4" />
-                      </a>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      className="hover:scale-125 hover:-rotate-12 transition-all duration-300"
+                      <Github className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all hover:scale-125 hover:-rotate-12 transition-all duration-300 hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1.5"
                     >
-                      <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
                   </div>
                 </CardContent>
               </Card>
@@ -243,5 +278,5 @@ export function Projects() {
         </div>
       </div>
     </section>
-  )
+  );
 }

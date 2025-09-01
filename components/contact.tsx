@@ -1,14 +1,21 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Github,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -16,262 +23,304 @@ export function Contact() {
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isVisible, setIsVisible] = useState(false);
 
-  const validateField = (name: string, value: string) => {
-    switch (name) {
-      case "name":
-        return value.length < 2 ? "Name must be at least 2 characters" : ""
-      case "email":
-        return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "Please enter a valid email" : ""
-      case "subject":
-        return value.length < 5 ? "Subject must be at least 5 characters" : ""
-      case "message":
-        return value.length < 10 ? "Message must be at least 10 characters" : ""
-      default:
-        return ""
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const element = document.getElementById("contact");
+    if (element) {
+      observer.observe(element);
     }
-  }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    return () => observer.disconnect();
+  }, []);
 
-    // Validate all fields
-    const newErrors: Record<string, string> = {}
-    Object.entries(formData).forEach(([key, value]) => {
-      const error = validateField(key, value)
-      if (error) newErrors[key] = error
-    })
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission here
+    console.log("Form submitted:", formData);
+    // You can add email service integration here
+  };
 
-    setErrors(newErrors)
-
-    if (Object.keys(newErrors).length === 0) {
-      setIsSubmitting(true)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      console.log("Form submitted:", formData)
-      setIsSubmitted(true)
-      setFormData({ name: "", email: "", subject: "", message: "" })
-      setIsSubmitting(false)
-
-      // Reset success state after 3 seconds
-      setTimeout(() => setIsSubmitted(false), 3000)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
-    }
-  }
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    const error = validateField(name, value)
-    if (error) {
-      setErrors((prev) => ({ ...prev, [name]: error }))
-    }
-  }
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: "Email",
-      value: "alex.chen@example.com",
-      href: "mailto:alex.chen@example.com",
-    },
-    {
-      icon: Phone,
-      label: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
-    },
-    {
-      icon: MapPin,
-      label: "Location",
-      value: "San Francisco, CA",
-      href: "#",
-    },
-  ]
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section
+      id="contact"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900 dark:bg-white"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-montserrat font-black text-3xl sm:text-4xl mb-4 text-balance">Get In Touch</h2>
-          <p className="font-open-sans text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-            Ready to collaborate on your next project? Let's discuss how we can bring your ideas to life.
+        {/* Header */}
+        <div
+          className={`text-center mb-16 transition-all duration-700 delay-200 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <h2 className="text-4xl font-bold text-white dark:text-gray-900 mb-4 hover:scale-105 transition-transform duration-300">
+            Get In Touch
+          </h2>
+          <p className="text-xl text-gray-300 dark:text-gray-600 max-w-2xl mx-auto">
+            I&apos;m always interested in hearing about new opportunities and
+            exciting projects. Let&apos;s discuss how we can work together!
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="font-montserrat font-bold text-2xl mb-6">Let's Connect</h3>
-              <p className="font-open-sans text-muted-foreground leading-relaxed mb-8">
-                I'm always interested in hearing about new opportunities, interesting projects, or just having a chat
-                about technology and development. Feel free to reach out!
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {contactInfo.map((info, index) => (
-                <div
-                  key={index}
-                  className="flex items-center space-x-4 hover:scale-105 transition-transform duration-200"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <info.icon className="h-5 w-5 text-primary" />
+          <div
+            className={`space-y-8 transition-all duration-700 delay-300 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-8"
+            }`}
+          >
+            <Card className="bg-slate-800/80 dark:bg-gray-50 backdrop-blur-sm hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-slate-700 dark:border-gray-200 hover:border-blue-400 dark:hover:border-blue-600">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-white dark:text-gray-900">
+                  Contact Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-200">
+                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+                    <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-200" />
                   </div>
                   <div>
-                    <p className="font-open-sans font-medium">{info.label}</p>
-                    {info.href !== "#" ? (
-                      <a
-                        href={info.href}
-                        className="font-open-sans text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {info.value}
-                      </a>
-                    ) : (
-                      <p className="font-open-sans text-muted-foreground">{info.value}</p>
-                    )}
+                    <p className="font-semibold text-white dark:text-gray-900">
+                      Email
+                    </p>
+                    <p className="text-gray-300 dark:text-gray-600">
+                      dansu.john@example.com
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="pt-8">
-              <h4 className="font-montserrat font-semibold mb-4">Response Time</h4>
-              <p className="font-open-sans text-muted-foreground leading-relaxed">
-                I typically respond to messages within 24 hours. For urgent inquiries, feel free to call or connect with
-                me on LinkedIn.
-              </p>
-            </div>
+                <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-200">
+                  <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors duration-200">
+                    <Phone className="h-6 w-6 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-200" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white dark:text-gray-900">
+                      Phone
+                    </p>
+                    <p className="text-gray-300 dark:text-gray-600">
+                      +1 (555) 123-4567
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-200">
+                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors duration-200">
+                    <MapPin className="h-6 w-6 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-200" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white dark:text-gray-900">
+                      Location
+                    </p>
+                    <p className="text-gray-300 dark:text-gray-600">
+                      Remote / Worldwide
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Social Links */}
+            <Card className="bg-slate-800/80 dark:bg-gray-50 backdrop-blur-sm hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-slate-700 dark:border-gray-200 hover:border-blue-400 dark:hover:border-blue-600">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-white dark:text-gray-900">
+                  Follow Me
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex space-x-4">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex-1 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                  >
+                    <Github className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-200" />
+                    GitHub
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex-1 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                  >
+                    <Linkedin className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-200" />
+                    LinkedIn
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex-1 hover:scale-105 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 group"
+                  >
+                    <Twitter className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-200" />
+                    Twitter
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Skills Badges */}
+            <Card className="bg-slate-800/80 dark:bg-gray-50 backdrop-blur-sm hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-slate-700 dark:border-gray-200 hover:border-blue-400 dark:hover:border-blue-600">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-white dark:text-gray-900">
+                  Available For
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Full-Stack Development",
+                    "Cybersecurity",
+                    "Penetration Testing",
+                    "Network Security",
+                    "Team Leadership",
+                    "Mentoring",
+                  ].map((skill, index) => (
+                    <Badge
+                      key={skill}
+                      variant="secondary"
+                      className="text-sm hover:scale-110 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-200 cursor-pointer"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Contact Form */}
-          <Card className="hover:shadow-lg transition-shadow relative overflow-hidden">
-            {isSubmitted && (
-              <div className="absolute inset-0 bg-green-500/90 flex items-center justify-center z-10 animate-fade-in">
-                <div className="text-center text-white">
-                  <CheckCircle className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold mb-2">Message Sent!</h3>
-                  <p>Thank you for reaching out. I'll get back to you soon.</p>
-                </div>
-              </div>
-            )}
+          <div
+            className={`transition-all duration-700 delay-500 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-8"
+            }`}
+          >
+            <Card className="bg-slate-800/80 dark:bg-gray-50 backdrop-blur-sm hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-slate-700 dark:border-gray-200 hover:border-blue-400 dark:hover:border-blue-600">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-white dark:text-gray-900">
+                  Send Message
+                </CardTitle>
+                <p className="text-gray-300 dark:text-gray-600">
+                  Fill out the form below and I&apos;ll get back to you as soon
+                  as possible.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2 group">
+                      <Label
+                        htmlFor="name"
+                        className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+                      >
+                        Name
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Your name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="bg-slate-700 dark:bg-white border-slate-600 dark:border-gray-300 focus:border-blue-400 focus:ring-blue-400 transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-600 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                      />
+                    </div>
+                    <div className="space-y-2 group">
+                      <Label
+                        htmlFor="email"
+                        className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+                      >
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="bg-slate-700 dark:bg-white border-slate-600 dark:border-gray-300 focus:border-blue-400 focus:ring-blue-400 transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-600 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
+                      />
+                    </div>
+                  </div>
 
-            <CardHeader>
-              <CardTitle className="font-montserrat font-bold text-xl">Send a Message</CardTitle>
-              <CardDescription className="font-open-sans">
-                Fill out the form below and I'll get back to you as soon as possible.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="font-open-sans font-medium">
-                      Name
+                  <div className="space-y-2 group">
+                    <Label
+                      htmlFor="subject"
+                      className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+                    >
+                      Subject
                     </Label>
                     <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
+                      id="subject"
+                      name="subject"
+                      type="text"
+                      placeholder="What's this about?"
+                      value={formData.subject}
                       onChange={handleChange}
-                      onBlur={handleBlur}
                       required
-                      className={`font-open-sans transition-all duration-200 ${errors.name ? "border-red-500 focus:border-red-500" : "focus:border-primary"}`}
+                      className="bg-slate-700 dark:bg-white border-slate-600 dark:border-gray-300 focus:border-blue-400 focus:ring-blue-400 transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-600 text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                     />
-                    {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="font-open-sans font-medium">
-                      Email
+
+                  <div className="space-y-2 group">
+                    <Label
+                      htmlFor="message"
+                      className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+                    >
+                      Message
                     </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
+                    <Textarea
+                      id="message"
+                      name="message"
+                      placeholder="Tell me about your project or opportunity..."
+                      value={formData.message}
                       onChange={handleChange}
-                      onBlur={handleBlur}
                       required
-                      className={`font-open-sans transition-all duration-200 ${errors.email ? "border-red-500 focus:border-red-500" : "focus:border-primary"}`}
+                      rows={6}
+                      className="bg-slate-700 dark:bg-white border-slate-600 dark:border-gray-300 focus:border-blue-400 focus:ring-blue-400 transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-600 resize-none text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500"
                     />
-                    {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="font-open-sans font-medium">
-                    Subject
-                  </Label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    required
-                    className={`font-open-sans transition-all duration-200 ${errors.subject ? "border-red-500 focus:border-red-500" : "focus:border-primary"}`}
-                  />
-                  {errors.subject && <p className="text-red-500 text-sm">{errors.subject}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="font-open-sans font-medium">
-                    Message
-                  </Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    required
-                    rows={5}
-                    className={`font-open-sans resize-none transition-all duration-200 ${errors.message ? "border-red-500 focus:border-red-500" : "focus:border-primary"}`}
-                  />
-                  {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full font-open-sans font-medium relative overflow-hidden"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full hover:scale-105 hover:shadow-lg transition-all duration-200 group"
+                  >
+                    <Send className="h-5 w-5 mr-2 group-hover:translate-x-1 transition-transform duration-200" />
+                    Send Message
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

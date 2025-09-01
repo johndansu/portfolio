@@ -1,63 +1,51 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useState, useEffect, useCallback } from "react";
 
 interface GlitchTextProps {
-  text: string
-  className?: string
+  text: string;
+  className?: string;
 }
 
 export function GlitchText({ text, className = "" }: GlitchTextProps) {
-  const [glitchText, setGlitchText] = useState(text)
-  const [isGlitching, setIsGlitching] = useState(false)
+  const [glitchText, setGlitchText] = useState(text);
+  const [isGlitching, setIsGlitching] = useState(false);
 
-  const glitchChars = "!<>-_\\/[]{}—=+*^?#________"
+  const glitch = useCallback(() => {
+    setIsGlitching(true);
+    setGlitchText(
+      text
+        .split("")
+        .map((char, index) => {
+          if (Math.random() < 0.3) {
+            return "!@#$%^&*"[Math.floor(Math.random() * 8)];
+          }
+          return char;
+        })
+        .join("")
+    );
 
-  const glitch = () => {
-    setIsGlitching(true)
-    let iterations = 0
-
-    const interval = setInterval(() => {
-      setGlitchText((prev) =>
-        prev
-          .split("")
-          .map((char, index) => {
-            if (index < iterations) {
-              return text[index]
-            }
-            return glitchChars[Math.floor(Math.random() * glitchChars.length)]
-          })
-          .join(""),
-      )
-
-      if (iterations >= text.length) {
-        clearInterval(interval)
-        setGlitchText(text)
-        setIsGlitching(false)
-      }
-
-      iterations += 1 / 3
-    }, 30)
-  }
+    setTimeout(() => {
+      setGlitchText(text);
+      setIsGlitching(false);
+    }, 100);
+  }, [text]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (Math.random() > 0.95 && !isGlitching) {
-        glitch()
-      }
-    }, 2000)
-
-    return () => clearInterval(timer)
-  }, [isGlitching])
+    const interval = setInterval(glitch, 2000);
+    return () => clearInterval(interval);
+  }, [glitch]);
 
   return (
     <span
       className={`${className} ${isGlitching ? "animate-pulse" : ""}`}
       style={{
-        textShadow: isGlitching ? "2px 0 #ff0000, -2px 0 #00ff00" : "none",
+        textShadow: isGlitching
+          ? "2px 0 red, -2px 0 blue, 0 2px green, 0 -2px yellow"
+          : "none",
       }}
     >
       {glitchText}
     </span>
-  )
+  );
 }
