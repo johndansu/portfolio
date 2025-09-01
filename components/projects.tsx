@@ -64,13 +64,7 @@ export function Projects() {
       title: "AI Content Generator",
       description:
         "AI-powered content creation platform that helps businesses generate marketing copy and social media content.",
-      technologies: [
-        "Next.js",
-        "OpenAI API",
-        "Prisma",
-        "Vercel",
-        "Tailwind CSS",
-      ],
+      technologies: ["Next.js", "OpenAI API", "Prisma", "Tailwind CSS"],
       github: "#",
       demo: "#",
       featured: true,
@@ -97,7 +91,7 @@ export function Projects() {
       title: "Blog Platform",
       description:
         "Modern blogging platform with markdown support, SEO optimization, and content management system.",
-      technologies: ["Next.js", "MDX", "Sanity CMS", "Vercel"],
+      technologies: ["Next.js", "MDX", "Sanity CMS"],
       github: "#",
       demo: "#",
       featured: false,

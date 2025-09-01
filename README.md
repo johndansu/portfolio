@@ -1,30 +1,44 @@
-# Tech portfolio
+# Tech Portfolio
 
-_Automatically synced with your [v0.app](https://v0.app) deployments_
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/johndansus-projects/v0-tech-portfolio)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/ZaZAfgrWeZt)
+A modern, interactive portfolio built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+This is a personal portfolio showcasing my skills, projects, and experience in web development and cybersecurity.
 
-## Deployment
+## Features
 
-Your project is live at:
+- **Interactive Components**: Animated counters, skill radar, interactive terminal
+- **Theme Support**: Light and dark mode with smooth transitions
+- **Responsive Design**: Optimized for all devices and screen sizes
+- **Modern UI**: Clean, professional design with smooth animations
+- **Performance**: Optimized for fast loading and smooth interactions
 
-**[https://vercel.com/johndansus-projects/v0-tech-portfolio](https://vercel.com/johndansus-projects/v0-tech-portfolio)**
+## Technologies Used
 
-## Build your app
+- **Frontend**: Next.js 15.5.2, React, TypeScript
+- **Styling**: Tailwind CSS, CSS Modules
+- **Icons**: Lucide React
+- **Animations**: CSS animations, Intersection Observer API
+- **Theme**: next-themes for dark/light mode
 
-Continue building your app on:
+## Getting Started
 
-**[https://v0.app/chat/projects/ZaZAfgrWeZt](https://v0.app/chat/projects/ZaZAfgrWeZt)**
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## How It Works
+## Build
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```bash
+npm run build
+npm start
+```
+
+## Development
+
+```bash
+npm run dev
+npm run lint
+```
